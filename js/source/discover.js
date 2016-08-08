@@ -9,6 +9,7 @@ import Rating from './components/Rating';
 import FormInput from './components/FormInput';
 import Form from './components/Form';
 import Actions from './components/Actions';
+import Dialog from './components/Dialog';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
