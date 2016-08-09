@@ -28,15 +28,22 @@ class Dialog extends Component {
                         {this.props.children}
                     </div>
                     <div className="DialogFooter">
-                        {this.props.hasCancel ?
-                            <span className="DialogDismiss" onClick={this.props.onAction.bind(this, 'dismiss')}> Cancel </span> : null }
-                        <Button
-                            onClick={this.props.onAction.bind(this, this.props.hasCancel ? 'confirm' : 'dismiss')}>{this.props.confirmLabel}</Button>
+            {this.props.hasCancel
+              ? <span
+                  className="DialogDismiss"
+                  onClick={this.props.onAction.bind(this, 'dismiss')}>
+                  Cancel
+                </span>
+              : null
+            }
+            <Button onClick={this.props.onAction.bind(this,
+                this.props.hasCancel ? 'confirm' : 'dismiss')}>
+              {this.props.confirmLabel}
+            </Button>
                     </div>
                 </div>
             </div>
-
-        )
+    );
     }
 
 
@@ -56,6 +63,6 @@ Dialog.defaultProps = {
     onAction: ()=> {
     },
     hasCancel: true,
-}
+};
 
 export default Dialog

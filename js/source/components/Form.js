@@ -22,7 +22,7 @@ class Form extends Component {
                     return (
                         <div className="FormRow" key={field.id}>
                             <label className="FormLabel" htmlFor={field.id}>{field.label}:</label>
-                            <FormInput {...field} red={field.id} defaultValue={prefilled}/>
+              <FormInput {...field} ref={field.id} defaultValue={prefilled} />
                         </div>
                     );
                 }
@@ -33,8 +33,9 @@ class Form extends Component {
                     <div className="FormRow" key={field.id}>
                         <span className="FormLabel">{field.label}:</span>
                         {
-                            field.type === 'rating' ? <Rating readonly={true} defaultValue={parseInt(prefilled, 10)}/> :
-                                <div>{prefilled}</div>
+              field.type === 'rating'
+                ? <Rating readonly={true} defaultValue={parseInt(prefilled, 10)} />
+                : <div>{prefilled}</div>
                         }
                     </div>
                 );

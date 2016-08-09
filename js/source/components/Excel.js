@@ -14,14 +14,14 @@ class Excel extends Component {
         super(props);
         this.state = {
             data: this.props.initialData,
-            sortBy: null, //schema.id
+      sortby: null, // schema.id
             descending: false,
-            edit: null, //[row index, schema id]
-            dialog: null,
-        }
+      edit: null, // [row index, schema.id],
+      dialog: null, // {type, idx}
     };
+  }
 
-    componentWillRecieveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
         this.setState({data: nextProps.initialData});
     }
 
@@ -31,16 +31,18 @@ class Excel extends Component {
 
     _sort(key) {
         let data = Array.from(this.state.data);
-        const descending = this.state.sortBy === key && !this.state.descending;
-        data.sort(function (a, b) {
-            return descending ? (a[column] < b[column] ? 1 : -1) : (a[column] > b[column] ? 1 : -1)
-        });
+    const descending = this.state.sortby === key && !this.state.descending;
+    data.sort((a, b) =>
+      descending
+        ? (a[key] < b[key] ? 1 : -1)
+        : (a[key] > b[key] ? 1 : -1)
+    );
         this.setState({
             data: data,
-            sortBy: key,
+      sortby: key,
             descending: descending,
         });
-        this._fireDataChange(data)
+    this._fireDataChange(data);
     }
 
     _showEditor(e) {
@@ -48,9 +50,7 @@ class Excel extends Component {
             edit: {
                 row: parseInt(e.target.dataset.row, 10),
                 key: e.target.dataset.key,
-            }
-        });
-        this._fireDataChange(data);
+    }});
     }
 
     _save(e){
@@ -65,23 +65,22 @@ class Excel extends Component {
         this._fireDataChange(data);
     }
 
-
-    _actionClick(rowIdx, action) {
-        this.setState({dialog: {type: action, idx: rowIdx}});
+  _actionClick(rowidx, action) {
+    this.setState({dialog: {type: action, idx: rowidx}});
     }
 
-    _deleteConfirmation(action) {
+  _deleteConfirmationClick(action) {
         if (action === 'dismiss') {
             this._closeDialog();
             return;
         }
         let data = Array.from(this.state.data);
-        data.splice(this.state, dialog.idx, 1);
+    data.splice(this.state.dialog.idx, 1);
         this.setState({
             dialog: null,
             data: data,
         });
-        this._fireDataChange(data)
+    this._fireDataChange(data);
     }
 
     _closeDialog() {
@@ -123,7 +122,7 @@ class Excel extends Component {
             case 'edit':
                 return this._renderFormDialog();
             default:
-                throw Error(`Unexpected dialog type ${this.state.dialog.type}`)
+        throw Error(`Unexpected dialog type ${this.state.dialog.type}`);
         }
     }
 
@@ -134,7 +133,7 @@ class Excel extends Component {
             <Dialog modal={true} header="Confirm deletion"
                     confirmLabel="Delete"
                     onAction={this._deleteConfirmationClick.bind(this)}>
-                {`Are you sure you want ti delete "${nameguess}"?`}
+        {`Are you sure you want to delete "${nameguess}"?`}
             </Dialog>
         );
     }
@@ -150,7 +149,7 @@ class Excel extends Component {
                       readonly={readonly}
                 />
             </Dialog>
-        )
+    );
     }
 
     _renderTable() {
@@ -163,11 +162,15 @@ class Excel extends Component {
                             return null;
                         }
                         let title = item.label;
-                        if (this.state.sortBy === item.id) {
+              if (this.state.sortby === item.id) {
                             title += this.state.descending ? '\u2191' : '\u2193';
                         }
                         return (
-                            <th className={`schema.${item.id}`} key={item.id} onClick={this._sort.bind(this, idem.id)}>
+                <th
+                  className={`schema-${item.id}`}
+                  key={item.id}
+                  onClick={this._sort.bind(this, item.id)}
+                >
                                 {title}
                             </th>
                         );
@@ -181,22 +184,22 @@ class Excel extends Component {
                 {this.state.data.map((row, rowidx)=> {
                     return (
                         <tr key={rowidx}>{
-                            Object.key(row).map((cell, idx)=> {
+                            Object.keys(row).map((cell, idx)=> {
                                 const schema = this.props.schema[idx];
                                 if (!schema || !schema.show) {
                                     return null;
                                 }
-                                const isRating = scehma.type === 'rating';
+                                const isRating = schema.type === 'rating';
                                 const edit = this.state.edit;
                                 let content = row[cell];
                                 if (!isRating && edit && edit.row === rowidx && edit.key === schema.id) {
                                     content = (
-                                        <form onSubmit={this._save.bind(this)}>
+                      <form onSubmit={this._save.bind(this)}>
                                             <FormInput ref="input" {...schema} defaultValue={content}/>
-                                        </form>
+                      </form>
                                     );
                                 } else if (isRating) {
-                                    content = <Rating readonly={true} defaultValue={Number(content)}/>
+                    content = <Rating readonly={true} defaultValue={Number(content)} />;
                                 }
                                 return (
                                     <td className={classNames({
@@ -209,7 +212,7 @@ class Excel extends Component {
                                         key={idx} data-row={rowidx} data-key={schema.id}>
                                         {content}
                                     </td>
-                                )
+                  );
                             }, this)}
                             <td className="ExcelDataCenter">
                                 <Actions onAction={this._actionClick.bind(this, rowidx)}/>
@@ -221,7 +224,7 @@ class Excel extends Component {
             </table>
         );
     }
-};
+}
 
 Excel.propTypes={
     schema: PropTypes.arrayOf(
@@ -231,6 +234,6 @@ Excel.propTypes={
         PropTypes.object
     ),
     onDataChange: PropTypes.func,
-}
+};
 
 export default Excel

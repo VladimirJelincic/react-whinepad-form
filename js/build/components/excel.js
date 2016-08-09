@@ -56,17 +56,16 @@ var Excel = function (_Component) {
 
         _this.state = {
             data: _this.props.initialData,
-            sortBy: null, //schema.id
+            sortby: null, // schema.id
             descending: false,
-            edit: null, //[row index, schema id]
-            dialog: null
-        };
+            edit: null, // [row index, schema.id],
+            dialog: null };
         return _this;
     }
 
     _createClass(Excel, [{
-        key: 'componentWillRecieveProps',
-        value: function componentWillRecieveProps(nextProps) {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
             this.setState({ data: nextProps.initialData });
         }
     }, {
@@ -78,13 +77,13 @@ var Excel = function (_Component) {
         key: '_sort',
         value: function _sort(key) {
             var data = Array.from(this.state.data);
-            var descending = this.state.sortBy === key && !this.state.descending;
+            var descending = this.state.sortby === key && !this.state.descending;
             data.sort(function (a, b) {
-                return descending ? a[column] < b[column] ? 1 : -1 : a[column] > b[column] ? 1 : -1;
+                return descending ? a[key] < b[key] ? 1 : -1 : a[key] > b[key] ? 1 : -1;
             });
             this.setState({
                 data: data,
-                sortBy: key,
+                sortby: key,
                 descending: descending
             });
             this._fireDataChange(data);
@@ -96,9 +95,7 @@ var Excel = function (_Component) {
                 edit: {
                     row: parseInt(e.target.dataset.row, 10),
                     key: e.target.dataset.key
-                }
-            });
-            this._fireDataChange(data);
+                } });
         }
     }, {
         key: '_save',
@@ -115,18 +112,18 @@ var Excel = function (_Component) {
         }
     }, {
         key: '_actionClick',
-        value: function _actionClick(rowIdx, action) {
-            this.setState({ dialog: { type: action, idx: rowIdx } });
+        value: function _actionClick(rowidx, action) {
+            this.setState({ dialog: { type: action, idx: rowidx } });
         }
     }, {
-        key: '_deleteConfirmation',
-        value: function _deleteConfirmation(action) {
+        key: '_deleteConfirmationClick',
+        value: function _deleteConfirmationClick(action) {
             if (action === 'dismiss') {
                 this._closeDialog();
                 return;
             }
             var data = Array.from(this.state.data);
-            data.splice(this.state, dialog.idx, 1);
+            data.splice(this.state.dialog.idx, 1);
             this.setState({
                 dialog: null,
                 data: data
@@ -190,7 +187,7 @@ var Excel = function (_Component) {
                 { modal: true, header: 'Confirm deletion',
                     confirmLabel: 'Delete',
                     onAction: this._deleteConfirmationClick.bind(this) },
-                'Are you sure you want ti delete "' + nameguess + '"?'
+                'Are you sure you want to delete "' + nameguess + '"?'
             );
         }
     }, {
@@ -227,12 +224,16 @@ var Excel = function (_Component) {
                                 return null;
                             }
                             var title = item.label;
-                            if (_this2.state.sortBy === item.id) {
+                            if (_this2.state.sortby === item.id) {
                                 title += _this2.state.descending ? '↑' : '↓';
                             }
                             return _react2.default.createElement(
                                 'th',
-                                { className: 'schema.' + item.id, key: item.id, onClick: _this2._sort.bind(_this2, idem.id) },
+                                {
+                                    className: 'schema-' + item.id,
+                                    key: item.id,
+                                    onClick: _this2._sort.bind(_this2, item.id)
+                                },
                                 title
                             );
                         }, this),
@@ -250,14 +251,14 @@ var Excel = function (_Component) {
                         return _react2.default.createElement(
                             'tr',
                             { key: rowidx },
-                            Object.key(row).map(function (cell, idx) {
+                            Object.keys(row).map(function (cell, idx) {
                                 var _classNames;
 
                                 var schema = _this2.props.schema[idx];
                                 if (!schema || !schema.show) {
                                     return null;
                                 }
-                                var isRating = scehma.type === 'rating';
+                                var isRating = schema.type === 'rating';
                                 var edit = _this2.state.edit;
                                 var content = row[cell];
                                 if (!isRating && edit && edit.row === rowidx && edit.key === schema.id) {
@@ -290,8 +291,6 @@ var Excel = function (_Component) {
 
     return Excel;
 }(_react.Component);
-
-;
 
 Excel.propTypes = {
     schema: _react.PropTypes.arrayOf(_react.PropTypes.object),
