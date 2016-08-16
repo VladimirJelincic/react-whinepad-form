@@ -19,7 +19,7 @@ class Dialog extends Component {
 
     render() {
         return (
-            <div className={this.props.modal ? 'DialogDialogModal' : 'Dialog'}>
+            <div className={this.props.modal ? 'Dialog DialogModal' : 'Dialog'}>
                 <div className={this.props.modal ? 'DialogModalWrap' : null}>
                     <div className="DialogHeader">
                         {this.props.header}

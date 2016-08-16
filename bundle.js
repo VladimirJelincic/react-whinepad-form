@@ -72,7 +72,7 @@ var Actions = function Actions(props) {
         { className: "Actions" },
         _react2.default.createElement(
             "span",
-            { tabIndex: "0", className: "ActionsInfo", title: "More Info", onClick: props.onAction.bind(null, 'info') },
+            { tabIndex: "0", className: "ActionsInfo", title: "More info", onClick: props.onAction.bind(null, 'info') },
             "ℹ"
         ),
         _react2.default.createElement(
@@ -183,7 +183,7 @@ var Dialog = function (_Component) {
         value: function render() {
             return _react2.default.createElement(
                 'div',
-                { className: this.props.modal ? 'DialogDialogModal' : 'Dialog' },
+                { className: this.props.modal ? 'Dialog DialogModal' : 'Dialog' },
                 _react2.default.createElement(
                     'div',
                     { className: this.props.modal ? 'DialogModalWrap' : null },
