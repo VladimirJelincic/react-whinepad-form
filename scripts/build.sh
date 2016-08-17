@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 #js transform
+eslint js/source
+flow
+npm test
 babel --presets react,es2015 js/source -d js/build
 #js package
 browserify js/build/app.js -o bundle.js

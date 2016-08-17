@@ -1,11 +1,13 @@
 "use strict";
+/* @flow */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Logo from './components/Logo';
 import Whinepad from './components/Whinepad';
 import schema from './schema';
 
-let data = JSON.parse(localStorage.getItem('data'));
+let data: Array<Object>;
+const storage: ?string = localStorage.getItem('data');
 
 if (!data) {
     data = {};

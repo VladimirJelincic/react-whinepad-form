@@ -22,7 +22,8 @@ var _schema2 = _interopRequireDefault(_schema);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var data = JSON.parse(localStorage.getItem('data'));
+var data = void 0;
+var storage = localStorage.getItem('data');
 
 if (!data) {
     data = {};
